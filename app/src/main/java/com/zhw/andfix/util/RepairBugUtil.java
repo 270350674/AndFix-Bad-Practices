@@ -82,7 +82,7 @@ public class RepairBugUtil {
                                 if (!result)
                                     Log.e(TAG, patchFileString + " delete fail");
                             }
-                            mLocalPreferencesHelper.saveOrUpdate(SPConst.IsHavePathDownLoad, false);
+//                            mLocalPreferencesHelper.saveOrUpdate(SPConst.IsHavePathDownLoad, false);
                         } catch (IOException e) {
                             Log.e(TAG, "", e);
                         } catch (Throwable throwable) {
@@ -93,7 +93,7 @@ public class RepairBugUtil {
                     @Override
                     public void onDownloadFailed(int id, int errorCode, String errorMessage) {
                         //下载失败的时候，标注标记位，等下次重新打开应用的时候重新下载
-                        mLocalPreferencesHelper.saveOrUpdate(SPConst.IsHavePathDownLoad, true);
+//                        mLocalPreferencesHelper.saveOrUpdate(SPConst.IsHavePathDownLoad, true);
                         Log.e(TAG, "onDownloadFailed");
 
                     }
@@ -114,6 +114,10 @@ public class RepairBugUtil {
         //远程的应用版本跟当前应用的版本比较
         if (BaseApplication.VERSION_NAME.equals(RemoteBean.app_v)) {
             //远程的应用版本跟本地保存的应用版本一样，但补丁不一样，则需要下载重新
+            /**
+             *第一种情况：当本地记录的Bean为空的时候（刚安装的时候可能为空）并且远程的Bean的path_v不为空的时候需要下载补丁。
+             * 第二种情况：当本地记录的path_v和远程Bean的path_v不一样的时候需要下载补丁。
+             */
             if (localBean == null && !TextUtils.isEmpty(RemoteBean.path_v)
                     || localBean.app_v.equals(RemoteBean.app_v) &&
                     !localBean.path_v.equals(RemoteBean.path_v)) {
@@ -121,9 +125,9 @@ public class RepairBugUtil {
                         SPConst.URL_PREFIX + RemoteBean.url);
                 String json = GsonUtils.getInstance().parse(RemoteBean);
                 mLocalPreferencesHelper.saveOrUpdate(SPConst.PATH_INFO, json);
-            } else {
+            } /*else {
                 mLocalPreferencesHelper.saveOrUpdate(SPConst.IsHavePathDownLoad, false);
-            }
+            }*/
         }
     }
 

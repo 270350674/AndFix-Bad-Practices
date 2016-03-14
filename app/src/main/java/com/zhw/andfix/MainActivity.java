@@ -9,21 +9,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-
 import android.view.View;
 
 import com.umeng.onlineconfig.OnlineConfigAgent;
-import com.zhw.andfix.consts.SPConst;
 import com.zhw.andfix.model.PatchBean;
 import com.zhw.andfix.util.GsonUtils;
-import com.zhw.andfix.util.LocalPreferencesHelper;
 import com.zhw.andfix.util.RepairBugUtil;
 import com.zhw.andfix.util.WeakHandler;
 
 
 public class MainActivity extends Activity {
 
-    private LocalPreferencesHelper mLocalPreferencesHelper;
     public static final int MSG_WHAT_DOWNLOAD = 0x111;
     public static final String UMENG_ONLINE_PARAM =  "pathInfo";    //友盟后台定义的参数名称
 
@@ -34,7 +30,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         registerMessageReceiver();  // used for receive msg
         initUmeng();    //初始化友盟在线参数
-        mLocalPreferencesHelper = new LocalPreferencesHelper(this, SPConst.SP_NAME);
         /*boolean haveDownload = mLocalPreferencesHelper.getBooleanDefaultFalse(
                 getString(R.string.spp_app_have_download));
         if (haveDownload){
