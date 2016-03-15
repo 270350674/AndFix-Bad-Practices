@@ -36,24 +36,6 @@ public class RepairBugUtil {
         return SingletonHolder.INSTANCE;
     }
 
-    public void fixBug(Context context) {
-        mLocalPreferencesHelper = new LocalPreferencesHelper(context, SPConst.SP_NAME);
-        String pathInfo = mLocalPreferencesHelper.getString(SPConst.PATH_INFO);
-        if (TextUtils.isEmpty(pathInfo)) return;
-        final PatchBean bean = GsonUtils.getInstance().parseIfNull(new TypeToken<PatchBean>() {
-        }.getType(), pathInfo);
-        if (bean == null) return;
-        if (!BaseApplication.VERSION_NAME.equals(bean.app_v)) {//判断应用的版本跟本地保存记录的版本号是否相同
-            //如果不一样，则标记不可下载
-            mLocalPreferencesHelper.saveOrUpdate(SPConst.IsHavePathDownLoad, false);
-            return;
-        }
-        if (TextUtils.isEmpty(bean.url)) return;
-        //这里使用拼接链接的目的是为减小推送内容的长度（极光推送限制了推送的长度为240个汉字）
-        String url = SPConst.URL_PREFIX + bean.url;
-        downloadAndLoad(context, bean, url);
-    }
-
     public void downloadAndLoad(Context context, final PatchBean bean, String downloadUrl) {
         if (mLocalPreferencesHelper == null) {
             mLocalPreferencesHelper = new LocalPreferencesHelper(context, SPConst.SP_NAME);
